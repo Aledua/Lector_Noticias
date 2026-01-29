@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noticias al Día</title>
+    <!-- Vinculo la hoja de estilos -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header>
+        <h1>Últimas Noticias del Mundo</h1>
+        <p>Actualizaciones en tiempo real vía API JSON</p>
+    </header>
+
+    <div class="controles">
+        <!-- Botón requerido para refrescar manualmente -->
+        <button id="btn-refrescar" onclick="cargarNoticias()">Actualizar Noticias</button>
+    </div>
+
+    <!-- Aquí es donde se mostrará el mensaje de error si algo falla -->
+    <div id="mensaje-error" class="oculto"></div>
+
+    <!-- Contenedor principal donde se inyectarán las noticias dinámicamente -->
+    <div id="contenedor-noticias" class="contenedor-grid">
+        <!-- Las noticias aparecerán aquí gracias a JavaScript -->
+    </div>
+
+    <!-- Vinculo el script al final del body -->
+    <script src="script.js"></script>
+
+</body>
+</html>
