@@ -1,8 +1,8 @@
 // CONFIGURACIÓN
 const apiKey = '66b7d133d6aca02f678fec9168ade1af';
-// Usamos 'search' con la query 'tecnologia' que es más robusto para encontrar resultados
-const url = 'https://gnews.io/api/v4/search?q=tecnologia&lang=es&max=6&apikey=' + apiKey;
-
+// Usamos un Proxy para evitar el bloqueo CORS del navegador
+// El proxy recibe nuestra petición, va a GNews, y nos devuelve la respuesta con los permisos correctos
+const url = 'https://corsproxy.io/?' + encodeURIComponent('https://gnews.io/api/v4/search?q=tecnologia&lang=es&max=6&apikey=' + apiKey);
 // PLAN B: Datos de respaldo por si la API falla (Mock Data)
 const noticiasRespaldo = [
     {
@@ -94,3 +94,4 @@ function mostrarError(mensaje) {
 
 // Iniciar
 cargarNoticias();
+
