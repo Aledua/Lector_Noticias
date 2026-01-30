@@ -1,70 +1,48 @@
-// CONFIGURACIÓN
+// Paso 1: Configuración
 const apiKey = '66b7d133d6aca02f678fec9168ade1af';
-// Usamos un Proxy para evitar el bloqueo CORS del navegador
-// El proxy recibe nuestra petición, va a GNews, y nos devuelve la respuesta con los permisos correctos
-const url = 'https://corsproxy.io/?' + encodeURIComponent('https://gnews.io/api/v4/search?q=tecnologia&lang=es&max=6&apikey=' + apiKey);
-// PLAN B: Datos de respaldo por si la API falla (Mock Data)
-const noticiasRespaldo = [
-    {
-        title: "La Inteligencia Artificial transforma el desarrollo web",
-        description: "Nuevas herramientas permiten a los desarrolladores crear sitios más rápidos.",
-        image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=500&q=60",
-        url: "#",
-        publishedAt: new Date().toISOString()
-    },
-    {
-        title: "El futuro de JavaScript en 2024",
-        description: "Las nuevas funcionalidades de ECMAScript prometen revolucionar el código.",
-        image: "https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?auto=format&fit=crop&w=500&q=60",
-        url: "#",
-        publishedAt: new Date().toISOString()
-    },
-    {
-        title: "Ciberseguridad: Un reto creciente",
-        description: "Empresas tecnológicas invierten millones en proteger datos de usuarios.",
-        image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=500&q=60",
-        url: "#",
-        publishedAt: new Date().toISOString()
-    }
-];
 
+// Usamos concatenación simple (+) para evitar errores con las comillas
+const url = 'https://gnews.io/api/v4/top-headlines?category=technology&lang=es&max=9&apikey=' + apiKey;
+
+// Paso 2: Función principal
 function cargarNoticias() {
     const contenedor = document.getElementById('contenedor-noticias');
     const mensajeError = document.getElementById('mensaje-error');
 
+    // Limpieza inicial
     contenedor.innerHTML = ''; 
     mensajeError.classList.add('oculto');
-    contenedor.innerHTML = '<p style="text-align:center; width:100%">Conectando con GNews API...</p>';
+    contenedor.innerHTML = '<p style="text-align:center; width:100%">Cargando noticias...</p>';
 
+    // Paso 3: Petición Fetch
     fetch(url)
         .then(function(response) {
-            // Si la respuesta no es OK (ej. error 403 o 401), lanzamos error
+            // Verifico si la respuesta es correcta (status 200)
             if (!response.ok) {
-                throw new Error(response.status + ' ' + response.statusText);
+                // Si la API dice que no (ej. error 403), lanzamos un error
+                throw new Error('La API rechazó la conexión. Status: ' + response.status);
             }
             return response.json();
         })
         .then(function(data) {
-            contenedor.innerHTML = ''; // Limpiar cargando
-            
+            contenedor.innerHTML = ''; // Borro el mensaje de cargando
+
+            // Verifico que existan artículos
             if (data.articles && data.articles.length > 0) {
                 mostrarNoticias(data.articles);
             } else {
-                throw new Error('La API no devolvió artículos.');
+                mostrarError('La API respondió, pero no hay noticias para mostrar.');
             }
         })
         .catch(function(error) {
-            console.error('Fallo la API, cargando respaldo:', error);
+            // Este bloque captura errores de red o de la API
+            console.error('Error detectado:', error);
             contenedor.innerHTML = '';
-            
-            // Muestra el error técnico en pantalla pequeña para saber qué pasó
-            mostrarError('Modo Offline: ' + error.message + '. Cargando datos de ejemplo...');
-            
-            // CARGAMOS EL RESPALDO AUTOMÁTICAMENTE
-            mostrarNoticias(noticiasRespaldo);
+            mostrarError('Error de conexión. Verifica que tengas internet y que la API Key sea válida.');
         });
 }
 
+// Paso 4: Renderizado
 function mostrarNoticias(articulos) {
     const contenedor = document.getElementById('contenedor-noticias');
 
@@ -72,13 +50,15 @@ function mostrarNoticias(articulos) {
         const tarjeta = document.createElement('div');
         tarjeta.className = 'noticia-card';
 
+        // Si no hay imagen, usamos una gris genérica
         const imagen = articulo.image || 'https://via.placeholder.com/300x200?text=Noticia';
 
+        // Construcción del HTML de la tarjeta
         tarjeta.innerHTML = 
             '<img src="' + imagen + '" alt="Imagen" class="noticia-imagen">' +
             '<div class="noticia-contenido">' +
                 '<a href="' + articulo.url + '" target="_blank" class="noticia-titulo">' + articulo.title + '</a>' +
-                '<p class="noticia-descripcion">' + (articulo.description || 'Sin descripción disponible.') + '</p>' +
+                '<p class="noticia-descripcion">' + (articulo.description || 'Sin descripción.') + '</p>' +
                 '<p class="noticia-fecha">' + new Date(articulo.publishedAt).toLocaleDateString() + '</p>' +
             '</div>';
 
@@ -86,12 +66,12 @@ function mostrarNoticias(articulos) {
     });
 }
 
+// Paso 5: Mostrar Errores
 function mostrarError(mensaje) {
     const divError = document.getElementById('mensaje-error');
     divError.textContent = mensaje;
     divError.classList.remove('oculto');
 }
 
-// Iniciar
+// Inicializar
 cargarNoticias();
-
