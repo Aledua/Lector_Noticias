@@ -1,48 +1,64 @@
-// Paso 1: Configuración
-const apiKey = '66b7d133d6aca02f678fec9168ade1af';
+// CONFIGURACIÓN
+const url = 'https://api.first.org/data/v1/news';
 
-// Usamos concatenación simple (+) para evitar errores con las comillas
-const url = 'http://gnews.io/api/v4/top-headlines?category=technology&lang=es&max=9&apikey=' + apiKey;
+// DATOS DE RESPALDO (Plan B)
+const noticiasRespaldo = [
+    {
+        title: "La Inteligencia Artificial transforma el desarrollo web",
+        summary: "Nuevas herramientas permiten a los desarrolladores crear sitios más rápidos.",
+        link: "#",
+        published: "2026-01-29"
+    },
+    {
+        title: "JavaScript domina el mercado en 2025",
+        summary: "El lenguaje sigue siendo el rey indiscutible del frontend.",
+        link: "#",
+        published: "2026-01-28"
+    }
+];
 
-// Paso 2: Función principal
+// BANCO DE IMÁGENES (Para variar el diseño visual)
+const imagenesTech = [
+    'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=60', // Chip
+    'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=500&q=60', // Código
+    'https://images.unsplash.com/photo-1531297425163-4366e6677f38?auto=format&fit=crop&w=500&q=60', // Laptop
+    'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=500&q=60', // Matrix/Seguridad
+    'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=500&q=60', // Pantalla
+    'https://images.unsplash.com/photo-1504384308090-c54be3855463?auto=format&fit=crop&w=500&q=60'  // Oficina
+];
+
 function cargarNoticias() {
     const contenedor = document.getElementById('contenedor-noticias');
     const mensajeError = document.getElementById('mensaje-error');
 
-    // Limpieza inicial
     contenedor.innerHTML = ''; 
     mensajeError.classList.add('oculto');
-    contenedor.innerHTML = '<p style="text-align:center; width:100%">Cargando noticias...</p>';
+    contenedor.innerHTML = '<p style="text-align:center; width:100%">Conectando con servidor de noticias...</p>';
 
-    // Paso 3: Petición Fetch
     fetch(url)
         .then(function(response) {
-            // Verifico si la respuesta es correcta (status 200)
             if (!response.ok) {
-                // Si la API dice que no (ej. error 403), lanzamos un error
-                throw new Error('La API rechazó la conexión. Status: ' + response.status);
+                throw new Error('Error de conexión: ' + response.status);
             }
             return response.json();
         })
         .then(function(data) {
-            contenedor.innerHTML = ''; // Borro el mensaje de cargando
+            contenedor.innerHTML = ''; 
 
-            // Verifico que existan artículos
-            if (data.articles && data.articles.length > 0) {
-                mostrarNoticias(data.articles);
+            if (data.data && data.data.length > 0) {
+                mostrarNoticias(data.data);
             } else {
-                mostrarError('La API respondió, pero no hay noticias para mostrar.');
+                throw new Error('La API no devolvió datos.');
             }
         })
         .catch(function(error) {
-            // Este bloque captura errores de red o de la API
             console.error('Error detectado:', error);
             contenedor.innerHTML = '';
-            mostrarError('Error de conexión. Verifica que tengas internet y que la API Key sea válida.');
+            mostrarError('Nota: ' + error.message + '. Mostrando datos locales.');
+            mostrarNoticias(noticiasRespaldo);
         });
 }
 
-// Paso 4: Renderizado
 function mostrarNoticias(articulos) {
     const contenedor = document.getElementById('contenedor-noticias');
 
@@ -50,29 +66,29 @@ function mostrarNoticias(articulos) {
         const tarjeta = document.createElement('div');
         tarjeta.className = 'noticia-card';
 
-        // Si no hay imagen, usamos una gris genérica
-        const imagen = articulo.image || 'https://via.placeholder.com/300x200?text=Noticia';
+        // LÓGICA DE IMAGEN ALEATORIA
+        // Math.random() genera un número entre 0 y 1
+        // Lo multiplicamos por el largo del arreglo y redondeamos hacia abajo
+        const indiceAleatorio = Math.floor(Math.random() * imagenesTech.length);
+        const imagen = imagenesTech[indiceAleatorio];
 
-        // Construcción del HTML de la tarjeta
         tarjeta.innerHTML = 
-            '<img src="' + imagen + '" alt="Imagen" class="noticia-imagen">' +
+            '<img src="' + imagen + '" alt="Noticia" class="noticia-imagen">' +
             '<div class="noticia-contenido">' +
-                '<a href="' + articulo.url + '" target="_blank" class="noticia-titulo">' + articulo.title + '</a>' +
-                '<p class="noticia-descripcion">' + (articulo.description || 'Sin descripción.') + '</p>' +
-                '<p class="noticia-fecha">' + new Date(articulo.publishedAt).toLocaleDateString() + '</p>' +
+                '<a href="' + articulo.link + '" target="_blank" class="noticia-titulo">' + articulo.title + '</a>' +
+                '<p class="noticia-descripcion">' + (articulo.summary || 'Descripción no disponible.') + '</p>' +
+                '<p class="noticia-fecha">' + (articulo.published || 'Fecha reciente') + '</p>' +
             '</div>';
 
         contenedor.appendChild(tarjeta);
     });
 }
 
-// Paso 5: Mostrar Errores
 function mostrarError(mensaje) {
     const divError = document.getElementById('mensaje-error');
     divError.textContent = mensaje;
     divError.classList.remove('oculto');
 }
 
-// Inicializar
+// Iniciar
 cargarNoticias();
-
