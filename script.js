@@ -19,12 +19,12 @@ const noticiasRespaldo = [
 
 // BANCO DE IMÁGENES (Para variar el diseño visual)
 const imagenesTech = [
-    'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=60', // Chip
-    'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=500&q=60', // Código
-    'https://images.unsplash.com/photo-1531297425163-4366e6677f38?auto=format&fit=crop&w=500&q=60', // Laptop
-    'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=500&q=60', // Matrix/Seguridad
-    'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=500&q=60', // Pantalla
-    'https://images.unsplash.com/photo-1504384308090-c54be3855463?auto=format&fit=crop&w=500&q=60'  // Oficina
+    'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=60',
+    'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=500&q=60',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPis2Ht5WMmcNVHSnaCDguUF4tCXwH5YMXHA&s',
+    'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=500&q=60',
+    'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=500&q=60',
+    'https://bernardmarr.com/wp-content/uploads/2022/04/The-10-Biggest-Technology-Trends-That-Will-Transform-The-Next-Decade.jpg'
 ];
 
 function cargarNoticias() {
@@ -92,3 +92,4 @@ function mostrarError(mensaje) {
 
 // Iniciar
 cargarNoticias();
+
