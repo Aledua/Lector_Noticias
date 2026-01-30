@@ -2,7 +2,7 @@
 const apiKey = '66b7d133d6aca02f678fec9168ade1af';
 
 // Usamos concatenación simple (+) para evitar errores con las comillas
-const url = 'https://gnews.io/api/v4/top-headlines?category=technology&lang=es&max=9&apikey=' + apiKey;
+const url = 'http://gnews.io/api/v4/top-headlines?category=technology&lang=es&max=9&apikey=' + apiKey;
 
 // Paso 2: Función principal
 function cargarNoticias() {
@@ -75,3 +75,4 @@ function mostrarError(mensaje) {
 
 // Inicializar
 cargarNoticias();
+
